@@ -28,35 +28,35 @@
     "updateGoldens": "cross-env UPDATE_GOLDENS=true pnpm test"
   },
   "devDependencies": {
-    "@types/node": "^22.13.11",
-    "@typescript-eslint/eslint-plugin": "^8.27.0",
-    "@typescript-eslint/parser": "^8.27.0",
-    "@vitest/coverage-v8": "^3.0.9",
+    "@types/node": "^22.14.1",
+    "@typescript-eslint/eslint-plugin": "^8.31.0",
+    "@typescript-eslint/parser": "^8.31.0",
+    "@vitest/coverage-v8": "^3.1.2",
     "cross-env": "^7.0.3",
-    "eslint": "^9.23.0",
-    "eslint-plugin-jsdoc": "^50.6.8",
+    "eslint": "^9.25.1",
+    "eslint-plugin-jsdoc": "^50.6.9",
     "eslint-plugin-tsdoc": "^0.4.0",
     "globals": "^16.0.0",
     "jsdoc": "^4.0.4",
     "read-pkg": "^9.0.1",
-    "typescript": "~5.8.2",
-    "typescript-eslint": "^8.27.0",
-    "vite": "^6.2.2",
-    "vite-node": "^3.0.9",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.31.0",
+    "vite": "^6.3.2",
+    "vite-node": "^3.1.2",
     "vite-plugin-dts": "^4.5.3",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.9",
+    "vitest": "^3.1.2",
     "vitest-dom": "^0.1.1"
   },
   "dependencies": {
-    "@rljson/hash": "^0.0.12",
+    "@rljson/hash": "^0.0.13",
     "@rljson/json": "^0.0.18",
-    "@rljson/rljson": "^0.0.21"
+    "@rljson/rljson": "^0.0.39"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
     ]
   },
-  "packageManager": "pnpm@10.6.4+sha512.da3d715bfd22a9a105e6e8088cfc7826699332ded60c423b14ec613a185f1602206702ff0fe4c438cb15c979081ce4cb02568e364b15174503a63c7a8e2a5f6c"
+  "packageManager": "pnpm@10.9.0+sha512.0486e394640d3c1fb3c9d43d49cf92879ff74f8516959c235308f5a8f62e2e19528a65cdc2a3058f587cde71eba3d5b56327c8c33a97e4c4051ca48a10ca2d5f"
 }
