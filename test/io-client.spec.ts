@@ -54,6 +54,6 @@ describe('io-client', () => {
     const client = new IoClient();
     const id = 1; // Example ID
     const result = await client.byId(id);
-    expect(result).toEqual({ id, name: 'user name' }); // Adjust expected result based on implementation
+    expect(result).toEqual({ id, name: 'user name' });
   });
 });
