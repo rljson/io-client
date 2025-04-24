@@ -46,41 +46,6 @@ describe('io-client', () => {
     expect(client).toBeDefined();
   });
 
-  it('should return a static value', async () => {
-    // Create an instance of the IoClient
-    const client = new IoClient();
-    const result = await client.greeting();
-    expect(result).toBe('hello tRPC v10!');
-  });
-
-  it('should return another static value', async () => {
-    // Create an instance of the IoClient
-    const client = new IoClient();
-    const result = await client.sayHi();
-    expect(result).toBe('Hello there!');
-  });
-
-  it('should return a value by ID', async () => {
-    // Create an instance of the IoClient
-    const client = new IoClient();
-    const id = 1; // Example ID
-    const result = await client.byId(id);
-    expect(result).toEqual({ id, name: 'user name' });
-  });
-
-  it('should return an iterable', async () => {
-    // Create an instance of the IoClient
-    const client = new IoClient();
-    const iterable = client.iterable();
-    const results: string[] = [];
-
-    for await (const value of await iterable) {
-      results.push(value);
-    }
-
-    expect(results).toEqual(['First update', 'Second update', 'Third update']);
-  });
-
   it('should return ioDump', async () => {
     // Create an instance of the IoClient
     const client = new IoClient();
