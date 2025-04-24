@@ -4,6 +4,7 @@
 // Use of this source code is governed by terms that can be
 // found in the LICENSE file in the root of this package.
 
+import { IoMem } from '@rljson/io';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 
 import cors from 'cors';
@@ -18,7 +19,18 @@ let server: ReturnType<(typeof express)['application']['listen']>;
 beforeEach(() => {
   const app = express();
   app.use(cors({ origin: 'http://localhost:3000' }));
-  app.use('/trpc', createExpressMiddleware({ router: ioRouter }));
+  app.use(
+    '/trpc',
+    createExpressMiddleware({
+      router: ioRouter,
+      createContext: () => {
+        const io = new IoMem();
+        return {
+          io,
+        };
+      },
+    }),
+  );
   server = app.listen(3000);
 });
 
@@ -67,5 +79,12 @@ describe('io-client', () => {
     }
 
     expect(results).toEqual(['First update', 'Second update', 'Third update']);
+  });
+
+  it('should return ioDump', async () => {
+    // Create an instance of the IoClient
+    const client = new IoClient();
+    const result = await client.ioDump();
+    expect(result).toBeDefined();
   });
 });

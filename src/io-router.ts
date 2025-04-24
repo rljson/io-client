@@ -4,14 +4,34 @@
 // Use of this source code is governed by terms that can be
 // found in the LICENSE file in the root of this package.
 
+import { Io } from '@rljson/io';
+// import { Json } from '@rljson/json';
+import { Rljson } from '@rljson/rljson';
 import { initTRPC } from '@trpc/server';
 
-const t = initTRPC.create();
-export const router = t.router;
-// why do we need this?
-export const publicProcedure = t.procedure;
+import SuperJSON from 'superjson';
 
+export interface IoContext {
+  io: Io;
+}
+
+const t = initTRPC.context<IoContext>().create({ transformer: SuperJSON });
+
+export const router = t.router;
+export const publicProcedure = t.procedure.use((opts) => {
+  const { ctx } = opts;
+  ctx.io;
+
+  return opts.next();
+});
 export const ioRouter = router({
+  //***** */
+  ioDump: publicProcedure.query(async (opts) => {
+    const result: Rljson = await opts.ctx.io.dump();
+    return result;
+  }),
+  //***** */
+
   greeting: publicProcedure.query(() => {
     return 'hello tRPC v10!';
   }),

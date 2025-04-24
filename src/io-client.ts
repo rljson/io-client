@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Rljson
 //
 // Use of this source code is governed by terms that can be
-// found in the LICENSE file in the root of this package.
+import { Rljson } from '@rljson/rljson';
 //httpBatchLink,
 import {
   createTRPCClient,
@@ -11,8 +11,9 @@ import {
   splitLink,
 } from '@trpc/client';
 
-import type { IoRouter } from './io-router.ts';
+import SuperJSON from 'superjson';
 
+import type { IoRouter } from './io-router.ts';
 export class IoClient {
   private _client: ReturnType<typeof createTRPCClient<IoRouter>>;
 
@@ -27,15 +28,26 @@ export class IoClient {
           condition: (op) => op.type === 'subscription',
           true: httpSubscriptionLink({
             url: 'http://localhost:3000/trpc',
-            // transformer,
+            transformer: SuperJSON,
           }),
           false: httpBatchStreamLink({
             url: 'http://localhost:3000/trpc',
-            // transformer,
+            transformer: SuperJSON,
           }),
         }),
       ],
     });
+  }
+
+  public async ioDump(): Promise<Rljson> {
+    try {
+      // Call the ioDump query on the tRPC client
+      const result = await this._client.ioDump.query();
+      return result;
+    } catch (error) {
+      console.error('Error calling ioDump query:', error);
+      throw error; // Rethrow the error to be handled by the caller
+    }
   }
 
   public async greeting(): Promise<string> {
