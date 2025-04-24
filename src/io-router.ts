@@ -27,17 +27,11 @@ export const ioRouter = router({
 
   iterable: publicProcedure.query(async function* () {
     yield 'First update';
-
     await new Promise((resolve) => setTimeout(resolve, 1000));
-
     yield 'Second update';
-
     await new Promise((resolve) => setTimeout(resolve, 1000));
-
     yield 'Third update';
   }),
 });
 
-// Export only the type of a router!
-// This prevents us from importing server code on the client.
 export type IoRouter = typeof ioRouter;
