@@ -8,33 +8,52 @@ import { createExpressMiddleware } from '@trpc/server/adapters/express';
 
 import cors from 'cors';
 import express from 'express';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { IoClient } from '../src/io-client';
 import { ioRouter } from '../src/io-router';
 
+
+let server: ReturnType<(typeof express)['application']['listen']>;
+
+beforeEach(() => {
+  const app = express();
+  app.use(cors({ origin: 'http://localhost:3000' }));
+  app.use('/trpc', createExpressMiddleware({ router: ioRouter }));
+  server = app.listen(3000);
+});
+
+afterEach(() => {
+  server.closeAllConnections();
+  server.close();
+});
+
 describe('io-client', () => {
   it('should be able to create a client', async () => {
-    const app = express();
-
-    app.use(cors({ origin: 'http://localhost:3000' }));
-    app.use('/trpc', createExpressMiddleware({ router: ioRouter }));
-    const server = app.listen(3000);
-    server.on('listening', async () => {
-      console.log('Server is running on http://localhost:3000/trpc');
-    });
-    server.on('error', (err) => {
-      console.error('Server error:', err);
-      server.close();
-    });
-
     // Create an instance of the IoClient
     const client = new IoClient();
     expect(client).toBeDefined();
+  });
+
+  it('should return a static value', async () => {
+    // Create an instance of the IoClient
+    const client = new IoClient();
     const result = await client.greeting();
     expect(result).toBe('hello tRPC v10!');
+  });
 
-    server.closeAllConnections();
-    server.close();
+  it('should return another static value', async () => {
+    // Create an instance of the IoClient
+    const client = new IoClient();
+    const result = await client.sayHi();
+    expect(result).toBe('Hello there!');
+  });
+
+  it('should return a value by ID', async () => {
+    // Create an instance of the IoClient
+    const client = new IoClient();
+    const id = 1; // Example ID
+    const result = await client.byId(id);
+    expect(result).toEqual({ id, name: 'user name' }); // Adjust expected result based on implementation
   });
 });

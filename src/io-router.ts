@@ -6,12 +6,10 @@
 
 import { initTRPC } from '@trpc/server';
 
-// import { publicProcedure, router } from './trpc.js';
 
-// You can use any variable name you like.
-// We use t to keep things simple.
 const t = initTRPC.create();
 export const router = t.router;
+// why do we need this?
 export const publicProcedure = t.procedure;
 
 export const ioRouter = router({
@@ -22,10 +20,9 @@ export const ioRouter = router({
     return 'Hello there!';
   }),
 
-  byId: publicProcedure.input(String).query(async (opts) => {
+  byId: publicProcedure.input(Number).query(async (opts) => {
     const { input } = opts;
-    console.log('input', input);
-    const user = 'fu';
+    const user: { id: Number; name: string } = { id: input, name: 'user name' };
     return user;
   }),
 });

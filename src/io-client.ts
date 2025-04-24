@@ -6,6 +6,7 @@
 
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 
+
 import type { IoRouter } from './io-router.ts';
 
 export class IoClient {
@@ -47,6 +48,15 @@ export class IoClient {
   public async sayHi(): Promise<string> {
     // Call the greeting query on the tRPC client
     const result = await this._client.sayHi.query();
+    return result;
+  }
+
+  public async byId(id: number): Promise<{ id: number; name: string }> {
+    // Call the greeting query on the tRPC client
+    const result = (await this._client.byId.query(id)) as {
+      id: number;
+      name: string;
+    };
     return result;
   }
 }
