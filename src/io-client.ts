@@ -3,9 +3,13 @@
 //
 // Use of this source code is governed by terms that can be
 // found in the LICENSE file in the root of this package.
-
-import { createTRPCClient, httpBatchLink } from '@trpc/client';
-
+//httpBatchLink,
+import {
+  createTRPCClient,
+  httpBatchStreamLink,
+  httpSubscriptionLink,
+  splitLink,
+} from '@trpc/client';
 
 import type { IoRouter } from './io-router.ts';
 
@@ -16,20 +20,20 @@ export class IoClient {
     // Initialize the tRPC client
     this._client = createTRPCClient<IoRouter>({
       links: [
-        httpBatchLink({
-          url: 'http://localhost:3000/trpc',
-        }),
-        // splitLink({
-        //   condition: (op) => op.type === 'subscription',
-        //   true: httpSubscriptionLink({
-        //     url: 'http://localhost:3000/trpc',
-        //     // transformer,
-        //   }),
-        //   false: httpBatchStreamLink({
-        //     url: 'http://localhost:3000/trpc',
-        //     // transformer,
-        //   }),
+        // httpBatchLink({
+        //   url: 'http://localhost:3000/trpc',
         // }),
+        splitLink({
+          condition: (op) => op.type === 'subscription',
+          true: httpSubscriptionLink({
+            url: 'http://localhost:3000/trpc',
+            // transformer,
+          }),
+          false: httpBatchStreamLink({
+            url: 'http://localhost:3000/trpc',
+            // transformer,
+          }),
+        }),
       ],
     });
   }
@@ -58,5 +62,16 @@ export class IoClient {
       name: string;
     };
     return result;
+  }
+
+  public async iterable(): Promise<string[]> {
+    const result = await this._client.iterable.query();
+
+    // Iterate AsyncIterable
+    for await (const value of result) {
+      console.log('Received value: ' + value);
+    }
+    console.log('Done');
+    return ['First update', 'Second update', 'Third update'];
   }
 }

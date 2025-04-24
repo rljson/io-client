@@ -13,7 +13,6 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { IoClient } from '../src/io-client';
 import { ioRouter } from '../src/io-router';
 
-
 let server: ReturnType<(typeof express)['application']['listen']>;
 
 beforeEach(() => {
@@ -55,5 +54,18 @@ describe('io-client', () => {
     const id = 1; // Example ID
     const result = await client.byId(id);
     expect(result).toEqual({ id, name: 'user name' });
+  });
+
+  it('should return an iterable', async () => {
+    // Create an instance of the IoClient
+    const client = new IoClient();
+    const iterable = client.iterable();
+    const results: string[] = [];
+
+    for await (const value of await iterable) {
+      results.push(value);
+    }
+
+    expect(results).toEqual(['First update', 'Second update', 'Third update']);
   });
 });

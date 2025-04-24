@@ -6,7 +6,6 @@
 
 import { initTRPC } from '@trpc/server';
 
-
 const t = initTRPC.create();
 export const router = t.router;
 // why do we need this?
@@ -25,7 +24,20 @@ export const ioRouter = router({
     const user: { id: Number; name: string } = { id: input, name: 'user name' };
     return user;
   }),
+
+  iterable: publicProcedure.query(async function* () {
+    yield 'First update';
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    yield 'Second update';
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    yield 'Third update';
+  }),
 });
+
 // Export only the type of a router!
 // This prevents us from importing server code on the client.
 export type IoRouter = typeof ioRouter;
