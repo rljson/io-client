@@ -10,6 +10,7 @@ import { Rljson, TableCfg } from '@rljson/rljson';
 import { initTRPC } from '@trpc/server';
 
 import SuperJSON from 'superjson';
+import { z } from 'zod';
 
 export interface IoContext {
   io: Io;
@@ -36,12 +37,9 @@ export const ioRouter = router({
     const result: Rljson = await opts.ctx.io.dumpTable({ table: input });
     return result;
   }),
-  // Needs a tableCfg as input***************************************
-  ioCreateTable: publicProcedure.input(String).mutation(async (opts) => {
-    const { input } = opts;
-    const tableCfg = input as unknown as TableCfg;
-    await opts.ctx.io.createTable({ tableCfg: tableCfg });
-    return void 0;
+
+  ioCreateTable: publicProcedure.input(z.unknown()).mutation(async (opts) => {
+    await createTable(opts);
   }),
 
   ioTableCfgs: publicProcedure.query(async (opts) => {
@@ -54,28 +52,20 @@ export const ioRouter = router({
     return result;
   }),
 
-  ioWrite: publicProcedure.input(String).mutation(async (opts) => {
+  ioWrite: publicProcedure.input(z.unknown()).mutation(async (opts) => {
     const { input } = opts;
     const data = input as unknown as Rljson;
     await opts.ctx.io.write({ data: data });
     return void 0;
   }),
   // mangle input to { table: string; where: Record<string, unknown> }
-  ioReadRows: publicProcedure.input(String).query(async (opts) => {
+  ioReadRows: publicProcedure.input(z.unknown()).query(async (opts) => {
     const { input } = opts;
-    console.log('input', input);
-    const dummyVal = {
-      table: 'x',
-      where: {
-        table: 'x',
-        where: {
-          column: 'string',
-          value: 'z' as JsonValue,
-        },
-      },
+    const data = input as {
+      table: string;
+      where: { [column: string]: JsonValue };
     };
-
-    const result: Rljson = await opts.ctx.io.readRows(dummyVal);
+    const result: Rljson = await opts.ctx.io.readRows(data);
     return result;
   }),
 });
@@ -83,3 +73,12 @@ export const ioRouter = router({
 //***** */
 
 export type IoRouter = typeof ioRouter;
+async function createTable(opts: any) {
+  const { input } = opts;
+  const tableCfg = input as unknown as TableCfg;
+
+  await opts.ctx.io.createTable({ tableCfg: tableCfg });
+  console.log(
+    JSON.stringify(await opts.ctx.io.dumpTable({ table: 'test' }), null, 2),
+  );
+}

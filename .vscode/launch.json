@@ -10,6 +10,7 @@
       "args": ["${workspaceFolder}/src/server/api.ts"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**", "**/*.mjs"], // Keep Node.js internals skipped
       "internalConsoleOptions": "neverOpen"
     },
     {
@@ -21,6 +22,7 @@
       "args": ["${workspaceFolder}/src/client/index.ts"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**", "**/*.mjs"], // Keep Node.js internals skipped
       "internalConsoleOptions": "neverOpen"
     }
   ]

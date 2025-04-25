@@ -14,6 +14,9 @@ importers:
       '@rljson/io':
         specifier: ^0.0.21
         version: 0.0.21
+      '@rljson/io-sqlite':
+        specifier: ^0.0.8
+        version: 0.0.8
       '@rljson/json':
         specifier: ^0.0.18
         version: 0.0.18
@@ -437,6 +440,10 @@ packages:
     resolution: {integrity: sha512-6K3ASn2PnyWOdqgU1/FtaU8vNUcHubcm7MlrhUUE63UOizBheoApYaMY91r3SaIRI0hbvR8NOa2k30PR/Ms/cw==}
     engines: {node: '>=22.14.0'}
 
+  '@rljson/io-sqlite@0.0.8':
+    resolution: {integrity: sha512-DElarQpwL53hrTPMrS7mP0Nm+sMsN+jgDb/rfFKdi2jJv0gpctl/wZXqIKFRC9LYW0rr1Dl3vuJ0klscwtRXhQ==}
+    engines: {node: '>=22.14.0'}
+
   '@rljson/io@0.0.21':
     resolution: {integrity: sha512-sxg8nOkaVfiF27VrkRDhUS9gj5AhwmV1pwwpoT0MtQHT+RSn7+mjq/U6KFxHRgqDvL3ZgyZM3ayZ1wl1swgKLg==}
     engines: {node: '>=22.14.0'}
@@ -451,6 +458,10 @@ packages:
 
   '@rljson/json@0.0.18':
     resolution: {integrity: sha512-sEFwnD6NwEbCl521PGKKX7xH2GyXXEBuJRx/RUxDsU6ZhKJkYyhYFe7G4TrGhDJefvBoillV0JqBGgYIJLjkYw==}
+    engines: {node: '>=22.14.0'}
+
+  '@rljson/rljson@0.0.18':
+    resolution: {integrity: sha512-nUOUw5YZKczXsok6BvzBQR7goPBL1XqPZmUQsc3FLg/8PUtgtgvd5QGhHunMzGg8u1kQ78p1w/OOTMXU8NwqYA==}
     engines: {node: '>=22.14.0'}
 
   '@rljson/rljson@0.0.32':
@@ -2508,6 +2519,12 @@ snapshots:
       '@rljson/json': 0.0.18
       js-base64: 3.7.7
 
+  '@rljson/io-sqlite@0.0.8':
+    dependencies:
+      '@rljson/hash': 0.0.12
+      '@rljson/json': 0.0.18
+      '@rljson/rljson': 0.0.18
+
   '@rljson/io@0.0.21':
     dependencies:
       '@rljson/hash': 0.0.13
@@ -2521,6 +2538,11 @@ snapshots:
   '@rljson/json@0.0.15': {}
 
   '@rljson/json@0.0.18': {}
+
+  '@rljson/rljson@0.0.18':
+    dependencies:
+      '@rljson/hash': 0.0.12
+      '@rljson/json': 0.0.18
 
   '@rljson/rljson@0.0.32':
     dependencies:

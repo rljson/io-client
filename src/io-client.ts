@@ -48,9 +48,10 @@ export class IoClient implements Io {
   dumpTable(request: { table: string }): Promise<Rljson> {
     return this._client.ioDumpTable.query(request.table);
   }
-  // how to avoid stringify here?
-  createTable(request: { tableCfg: TableCfg }): Promise<void> {
-    return this._client.ioCreateTable.mutate(JSON.stringify(request.tableCfg));
+
+  async createTable(request: { tableCfg: TableCfg }): Promise<void> {
+    const tableCfg = request.tableCfg as TableCfg;
+    await this._client.ioCreateTable.mutate(tableCfg);
   }
   tableCfgs(): Promise<Rljson> {
     return this._client.ioTableCfgs.query();
@@ -59,13 +60,13 @@ export class IoClient implements Io {
     return this._client.ioAllTableNames.query();
   }
   write(request: { data: Rljson }): Promise<void> {
-    return this._client.ioWrite.mutate(JSON.stringify(request.data));
+    return this._client.ioWrite.mutate(request.data);
   }
   readRows(request: {
     table: string;
     where: { [column: string]: JsonValue };
   }): Promise<Rljson> {
-    return this._client.ioReadRows.query(JSON.stringify(request));
+    return this._client.ioReadRows.query(request);
   }
 
   public async ioDump(): Promise<Rljson> {
@@ -93,7 +94,7 @@ export class IoClient implements Io {
   public async ioCreateTable(request: { tableCfg: TableCfg }): Promise<void> {
     try {
       // avoid stringify here*******************************************
-      await this._client.ioCreateTable.mutate(JSON.stringify(request.tableCfg));
+      await this._client.ioCreateTable.mutate(request.tableCfg);
     } catch (error) {
       console.error('Error calling createTable mutation:', error);
       throw error; // Rethrow the error to be handled by the caller
@@ -113,7 +114,7 @@ export class IoClient implements Io {
   public async ioWrite(request: { data: Rljson }): Promise<void> {
     try {
       // Call the ioDump query on the tRPC client
-      await this._client.ioWrite.mutate(JSON.stringify(request.data));
+      await this._client.ioWrite.mutate(request.data);
     } catch (error) {
       console.error('Error calling ioWrite mutation:', error);
       throw error; // Rethrow the error to be handled by the caller

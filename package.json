@@ -54,6 +54,7 @@
   "dependencies": {
     "@rljson/hash": "^0.0.13",
     "@rljson/io": "^0.0.21",
+    "@rljson/io-sqlite": "^0.0.8",
     "@rljson/json": "^0.0.18",
     "@rljson/rljson": "^0.0.39",
     "@trpc/client": "^11.1.1",
