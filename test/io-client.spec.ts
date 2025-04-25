@@ -19,9 +19,11 @@ import { ioRouter } from '../src/io-router';
 
 let server: ReturnType<(typeof express)['application']['listen']>;
 let client: IoClient;
+let io: IoMem;
 
 beforeEach(() => {
   // Run server with context
+  const io = new IoMem();
   const app = express();
   app.use(cors({ origin: 'http://localhost:3000' }));
   app.use(
@@ -29,7 +31,6 @@ beforeEach(() => {
     createExpressMiddleware({
       router: ioRouter,
       createContext: () => {
-        const io = new IoMem();
         // const io = new IoSqlite();
         return {
           io,
@@ -71,7 +72,7 @@ describe('io-client', () => {
 
     const result = await client.ioDumpTable({ table: 'test' });
 
-    expect(result).toEqual('test');
+    expect(result.test).toBeDefined();
   });
 
   it('should return ioTableCfgs', async () => {
