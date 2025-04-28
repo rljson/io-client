@@ -86,18 +86,33 @@ describe('io-client', () => {
   });
 
   it('should write data', async () => {
+    // create a table first
+    const tableCfg: TableCfg = hip(exampleTableCfg({ key: 'tableA' }));
+    const res1 = await client.createTable({ tableCfg: tableCfg });
+
+    // create content
     let inputValue: Rljson = {
       tableA: {
         _type: 'ingredients',
         _data: [{ key: 'keyA2', value: 'a2' }],
       },
     };
+
+    // write content
     await client.write({ data: inputValue });
+
+    // dump table to check if data is written
+    const resdump = await client.ioDumpTable({ table: 'tableA' });
+    expect(resdump.tableA._data.length).toEqual(1);
+
+    // check if data is written correctly
     const data = {
-      table: 'revisions',
-      where: { id: 'test' },
+      table: 'tableA',
+      where: { key: 'keyA2' },
     };
     const result = await client.readRows(data);
+    expect(result.tableA._data.length).toEqual(1);
+    expect(result.tableA._data[0].key).toEqual('keyA2');
   });
 
   it('should read rows', async () => {

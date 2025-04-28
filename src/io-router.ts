@@ -78,7 +78,4 @@ async function createTable(opts: any) {
   const tableCfg = input as unknown as TableCfg;
 
   await opts.ctx.io.createTable({ tableCfg: tableCfg });
-  console.log(
-    JSON.stringify(await opts.ctx.io.dumpTable({ table: 'test' }), null, 2),
-  );
 }
