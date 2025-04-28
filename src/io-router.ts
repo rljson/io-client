@@ -19,12 +19,13 @@ export interface IoContext {
 const t = initTRPC.context<IoContext>().create({ transformer: SuperJSON });
 
 export const router = t.router;
-export const publicProcedure = t.procedure.use((opts) => {
-  const { ctx } = opts;
-  ctx.io;
+export const publicProcedure = t.procedure;
+// export const publicProcedure = t.procedure.use((opts) => {
+//   const { ctx } = opts;
+//   ctx.io;
 
-  return opts.next();
-});
+//   return opts.next();
+// });
 export const ioRouter = router({
   //***** */
   ioDump: publicProcedure.query(async (opts) => {

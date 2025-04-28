@@ -19,7 +19,6 @@ import { ioRouter } from '../src/io-router';
 
 let server: ReturnType<(typeof express)['application']['listen']>;
 let client: IoClient;
-let io: IoMem;
 
 beforeEach(() => {
   // Run server with context
@@ -31,7 +30,6 @@ beforeEach(() => {
     createExpressMiddleware({
       router: ioRouter,
       createContext: () => {
-        // const io = new IoSqlite();
         return {
           io,
         };
@@ -55,12 +53,12 @@ describe('io-client', () => {
   });
 
   it('should return ioDump', async () => {
-    const result = await client.ioDump();
+    const result = await client.dump();
     expect(result).toBeDefined();
   });
 
-  it('should return ioDumpTable', async () => {
-    const result = await client.ioDumpTable({ table: 'revisions' });
+  it('should return dumpTable', async () => {
+    const result = await client.dumpTable({ table: 'revisions' });
     expect(result.revisions._tableCfg).toEqual('KK7MV6tta9SVVZx_GSP3Dg');
     expect(result.revisions._type).toEqual('ingredients');
     console.log(JSON.stringify(result, null, 2));
@@ -68,15 +66,15 @@ describe('io-client', () => {
 
   it('should create a table', async () => {
     const tableCfg: TableCfg = hip(exampleTableCfg({ key: 'test' }));
-    const res1 = await client.createTable({ tableCfg: tableCfg });
+    await client.createTable({ tableCfg: tableCfg });
 
-    const result = await client.ioDumpTable({ table: 'test' });
+    const result = await client.dumpTable({ table: 'test' });
 
     expect(result.test).toBeDefined();
   });
 
-  it('should return ioTableCfgs', async () => {
-    const result = await client.ioTableCfgs();
+  it('should return tableCfgs', async () => {
+    const result = await client.tableCfgs();
     expect(result.tableCfgs._data.length).toEqual(2);
   });
 
@@ -88,10 +86,10 @@ describe('io-client', () => {
   it('should write data', async () => {
     // create a table first
     const tableCfg: TableCfg = hip(exampleTableCfg({ key: 'tableA' }));
-    const res1 = await client.createTable({ tableCfg: tableCfg });
+    await client.createTable({ tableCfg: tableCfg });
 
     // create content
-    let inputValue: Rljson = {
+    const inputValue: Rljson = {
       tableA: {
         _type: 'ingredients',
         _data: [{ key: 'keyA2', value: 'a2' }],
@@ -102,7 +100,7 @@ describe('io-client', () => {
     await client.write({ data: inputValue });
 
     // dump table to check if data is written
-    const resdump = await client.ioDumpTable({ table: 'tableA' });
+    const resdump = await client.dumpTable({ table: 'tableA' });
     expect(resdump.tableA._data.length).toEqual(1);
 
     // check if data is written correctly
@@ -122,5 +120,11 @@ describe('io-client', () => {
     };
     const result = await client.readRows(data);
     expect(result.tableCfgs._data.length).toEqual(2);
+  });
+
+  it('should resolve isReady', async () => {
+    const readyPromise = client.isReady();
+    client['_isReady'].resolve(); // Simulate readiness
+    await expect(readyPromise).resolves.toBeUndefined();
   });
 });

@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Rljson
 //
 import { Io } from '@rljson/io';
+import { IsReady } from '@rljson/is-ready';
 import { JsonValue } from '@rljson/json';
 import { Rljson, TableCfg } from '@rljson/rljson';
 //httpBatchLink,
@@ -16,11 +17,11 @@ import SuperJSON from 'superjson';
 
 import type { IoRouter } from './io-router.ts';
 export class IoClient implements Io {
-  private _client: ReturnType<typeof createTRPCClient<IoRouter>>;
+  private _routerClient: ReturnType<typeof createTRPCClient<IoRouter>>;
 
   constructor() {
     // Initialize the tRPC client
-    this._client = createTRPCClient<IoRouter>({
+    this._routerClient = createTRPCClient<IoRouter>({
       links: [
         // httpBatchLink({
         //   url: 'http://localhost:3000/trpc',
@@ -40,95 +41,35 @@ export class IoClient implements Io {
     });
   }
   isReady(): Promise<void> {
-    throw new Error('Method not implemented.');
+    return this._isReady.promise;
   }
   dump(): Promise<Rljson> {
-    return this._client.ioDump.query();
+    return this._routerClient.ioDump.query();
   }
+
   dumpTable(request: { table: string }): Promise<Rljson> {
-    return this._client.ioDumpTable.query(request.table);
+    return this._routerClient.ioDumpTable.query(request.table);
   }
 
   async createTable(request: { tableCfg: TableCfg }): Promise<void> {
     const tableCfg = request.tableCfg as TableCfg;
-    await this._client.ioCreateTable.mutate(tableCfg);
+    await this._routerClient.ioCreateTable.mutate(tableCfg);
   }
   tableCfgs(): Promise<Rljson> {
-    return this._client.ioTableCfgs.query();
+    return this._routerClient.ioTableCfgs.query();
   }
   allTableNames(): Promise<string[]> {
-    return this._client.ioAllTableNames.query();
+    return this._routerClient.ioAllTableNames.query();
   }
   write(request: { data: Rljson }): Promise<void> {
-    return this._client.ioWrite.mutate(request.data);
+    return this._routerClient.ioWrite.mutate(request.data);
   }
   readRows(request: {
     table: string;
     where: { [column: string]: JsonValue };
   }): Promise<Rljson> {
-    return this._client.ioReadRows.query(request);
+    return this._routerClient.ioReadRows.query(request);
   }
 
-  public async ioDump(): Promise<Rljson> {
-    try {
-      // Call the ioDump query on the tRPC client
-      const result = await this._client.ioDump.query();
-      return result;
-    } catch (error) {
-      console.error('Error calling ioDump query:', error);
-      throw error; // Rethrow the error to be handled by the caller
-    }
-  }
-
-  public async ioDumpTable(request: { table: string }): Promise<Rljson> {
-    try {
-      // Call the ioDump query on the tRPC client
-      const result = await this._client.ioDumpTable.query(request.table);
-      return result;
-    } catch (error) {
-      console.error('Error calling ioDumpTable query:', error);
-      throw error; // Rethrow the error to be handled by the caller
-    }
-  }
-
-  public async ioCreateTable(request: { tableCfg: TableCfg }): Promise<void> {
-    try {
-      // avoid stringify here*******************************************
-      await this._client.ioCreateTable.mutate(request.tableCfg);
-    } catch (error) {
-      console.error('Error calling createTable mutation:', error);
-      throw error; // Rethrow the error to be handled by the caller
-    }
-  }
-
-  public async ioAllTableNames(): Promise<string[]> {
-    try {
-      // Call the ioDump query on the tRPC client
-      const result = await this._client.ioAllTableNames.query();
-      return result;
-    } catch (error) {
-      console.error('Error calling ioAllTableNames query:', error);
-      throw error; // Rethrow the error to be handled by the caller
-    }
-  }
-  public async ioWrite(request: { data: Rljson }): Promise<void> {
-    try {
-      // Call the ioDump query on the tRPC client
-      await this._client.ioWrite.mutate(request.data);
-    } catch (error) {
-      console.error('Error calling ioWrite mutation:', error);
-      throw error; // Rethrow the error to be handled by the caller
-    }
-  }
-
-  public async ioTableCfgs(): Promise<Rljson> {
-    try {
-      // Call the ioDump query on the tRPC client
-      const result = await this._client.ioTableCfgs.query();
-      return result;
-    } catch (error) {
-      console.error('Error calling ioTableCfgs query:', error);
-      throw error; // Rethrow the error to be handled by the caller
-    }
-  }
+  private _isReady = new IsReady();
 }

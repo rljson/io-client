@@ -17,6 +17,9 @@ importers:
       '@rljson/io-sqlite':
         specifier: ^0.0.8
         version: 0.0.8
+      '@rljson/is-ready':
+        specifier: ^0.0.17
+        version: 0.0.17
       '@rljson/json':
         specifier: ^0.0.18
         version: 0.0.18
