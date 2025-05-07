@@ -1,31 +1,26 @@
 // @license
 // Copyright (c) 2025 Rljson
 //
-import { Io } from '@rljson/io';
+import { Io, IoTools } from '@rljson/io';
 import { IsReady } from '@rljson/is-ready';
 import { JsonValue } from '@rljson/json';
-import { Rljson, TableCfg } from '@rljson/rljson';
+import { Rljson, TableCfg, TableKey } from '@rljson/rljson';
 //httpBatchLink,
 import {
-  createTRPCClient,
-  httpBatchStreamLink,
-  httpSubscriptionLink,
-  splitLink,
+  createTRPCClient, httpBatchStreamLink, httpSubscriptionLink, splitLink
 } from '@trpc/client';
 
 import SuperJSON from 'superjson';
 
+
 import type { IoRouter } from './io-router.ts';
 export class IoClient implements Io {
-  private _routerClient: ReturnType<typeof createTRPCClient<IoRouter>>;
+  private _clientRouter: ReturnType<typeof createTRPCClient<IoRouter>>;
 
   constructor() {
     // Initialize the tRPC client
-    this._routerClient = createTRPCClient<IoRouter>({
+    this._clientRouter = createTRPCClient<IoRouter>({
       links: [
-        // httpBatchLink({
-        //   url: 'http://localhost:3000/trpc',
-        // }),
         splitLink({
           condition: (op) => op.type === 'subscription',
           true: httpSubscriptionLink({
@@ -39,37 +34,62 @@ export class IoClient implements Io {
         }),
       ],
     });
+    this.init();
   }
+
+  private _ioTools!: IoTools;
+  private _isReady = new IsReady();
+
   isReady(): Promise<void> {
     return this._isReady.promise;
   }
+
+  async init(): Promise<void> {
+    await this._init();
+  }
+
+  tableExists(tableKey: TableKey): Promise<boolean> {
+    return this._clientRouter.tableExists.query(tableKey);
+  }
   dump(): Promise<Rljson> {
-    return this._routerClient.ioDump.query();
+    return this._clientRouter.dump.query();
   }
 
   dumpTable(request: { table: string }): Promise<Rljson> {
-    return this._routerClient.ioDumpTable.query(request.table);
+    return this._clientRouter.dumpTable.query(request.table);
   }
 
-  async createTable(request: { tableCfg: TableCfg }): Promise<void> {
+  async createOrExtendTable(request: { tableCfg: TableCfg }): Promise<void> {
     const tableCfg = request.tableCfg as TableCfg;
-    await this._routerClient.ioCreateTable.mutate(tableCfg);
+    await this._clientRouter.createOrExtendTable.mutate(tableCfg);
   }
   tableCfgs(): Promise<Rljson> {
-    return this._routerClient.ioTableCfgs.query();
+    return this._clientRouter.tableCfgs.query();
   }
-  allTableNames(): Promise<string[]> {
-    return this._routerClient.ioAllTableNames.query();
+
+  allTableKeys(): Promise<string[]> {
+    return this._ioTools.allTableKeys();
   }
+
+  rowCount(table: string): Promise<number> {
+    return this._clientRouter.rowCount.query(table);
+  }
+
   write(request: { data: Rljson }): Promise<void> {
-    return this._routerClient.ioWrite.mutate(request.data);
+    return this._clientRouter.write.mutate(request.data);
   }
   readRows(request: {
     table: string;
     where: { [column: string]: JsonValue };
   }): Promise<Rljson> {
-    return this._routerClient.ioReadRows.query(request);
+    return this._clientRouter.readRows.query(request);
   }
 
-  private _isReady = new IsReady();
+  private async _init() {
+    // Create tableCfgs table
+    this._ioTools = new IoTools(this);
+    this._clientRouter.initTableCfgs.query();
+    await this._ioTools.initRevisionsTable();
+    this._isReady.resolve();
+  }
 }

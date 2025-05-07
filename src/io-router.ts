@@ -1,9 +1,6 @@
 // @license
 // Copyright (c) 2025 Rljson
 //
-// Use of this source code is governed by terms that can be
-// found in the LICENSE file in the root of this package.
-
 import { Io } from '@rljson/io';
 import { JsonValue } from '@rljson/json';
 import { Rljson, TableCfg } from '@rljson/rljson';
@@ -11,6 +8,7 @@ import { initTRPC } from '@trpc/server';
 
 import SuperJSON from 'superjson';
 import { z } from 'zod';
+
 
 export interface IoContext {
   io: Io;
@@ -20,47 +18,45 @@ const t = initTRPC.context<IoContext>().create({ transformer: SuperJSON });
 
 export const router = t.router;
 export const publicProcedure = t.procedure;
-// export const publicProcedure = t.procedure.use((opts) => {
-//   const { ctx } = opts;
-//   ctx.io;
-
-//   return opts.next();
-// });
 export const ioRouter = router({
   //***** */
-  ioDump: publicProcedure.query(async (opts) => {
+  dump: publicProcedure.query(async (opts) => {
     const result: Rljson = await opts.ctx.io.dump();
     return result;
   }),
 
-  ioDumpTable: publicProcedure.input(String).query(async (opts) => {
+  dumpTable: publicProcedure.input(String).query(async (opts) => {
     const { input } = opts;
     const result: Rljson = await opts.ctx.io.dumpTable({ table: input });
     return result;
   }),
 
-  ioCreateTable: publicProcedure.input(z.unknown()).mutation(async (opts) => {
-    await createTable(opts);
-  }),
+  createOrExtendTable: publicProcedure
+    .input(z.unknown())
+    .mutation(async (opts) => {
+      await createOrExtendTable(opts);
+    }),
 
-  ioTableCfgs: publicProcedure.query(async (opts) => {
+  tableCfgs: publicProcedure.query(async (opts) => {
     const result: Rljson = await opts.ctx.io.tableCfgs();
     return result;
   }),
 
-  ioAllTableNames: publicProcedure.query(async (opts) => {
-    const result: string[] = await opts.ctx.io.allTableNames();
-    return result;
-  }),
+  // error: don't know
+  // allTableKeys: publicProcedure.query(async (opts) => {
+  //   const result: string[] = await opts.ctx.io.allTableKeys();
+  //   return result;
+  // }),
 
-  ioWrite: publicProcedure.input(z.unknown()).mutation(async (opts) => {
+  write: publicProcedure.input(z.unknown()).mutation(async (opts) => {
     const { input } = opts;
     const data = input as unknown as Rljson;
+
     await opts.ctx.io.write({ data: data });
     return void 0;
   }),
   // mangle input to { table: string; where: Record<string, unknown> }
-  ioReadRows: publicProcedure.input(z.unknown()).query(async (opts) => {
+  readRows: publicProcedure.input(z.unknown()).query(async (opts) => {
     const { input } = opts;
     const data = input as {
       table: string;
@@ -69,14 +65,30 @@ export const ioRouter = router({
     const result: Rljson = await opts.ctx.io.readRows(data);
     return result;
   }),
+
+  initTableCfgs: publicProcedure.query(async (opts) => {
+    const result: Rljson = await opts.ctx.io.tableCfgs();
+    return result;
+  }),
+  rowCount: publicProcedure.input(String).query(async (opts) => {
+    const { input } = opts;
+    const result: number = await opts.ctx.io.rowCount(input);
+    return result;
+  }),
+  tableExists: publicProcedure.input(String).query(async (opts) => {
+    const { input } = opts;
+    const result: boolean = await opts.ctx.io.tableExists(input);
+    return result;
+  }),
 });
 
 //***** */
 
 export type IoRouter = typeof ioRouter;
-async function createTable(opts: any) {
+
+async function createOrExtendTable(opts: any) {
   const { input } = opts;
   const tableCfg = input as unknown as TableCfg;
 
-  await opts.ctx.io.createTable({ tableCfg: tableCfg });
+  await opts.ctx.io.createOrExtendTable({ tableCfg: tableCfg });
 }
