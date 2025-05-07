@@ -17,6 +17,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { IoClient } from '../src/io-client';
 import { ioRouter } from '../src/io-router';
 
+import { expectGolden } from './setup/goldens.ts';
+
+const fs = require('fs');
+const path = require('path');
+
 let server: ReturnType<(typeof express)['application']['listen']>;
 let client: IoClient;
 
@@ -41,6 +46,7 @@ beforeEach(async () => {
 
   // Create an instance of the IoClient
   client = new IoClient();
+  //await client.isReady();
 });
 
 afterEach(() => {
@@ -51,23 +57,26 @@ afterEach(() => {
 describe('io-client', () => {
   it('should be able to create a client', async () => {
     expect(client).toBeDefined();
+    expect(client).toBeInstanceOf(IoClient);
+    expect(client['_clientRouter']).toBeDefined();
+    expect(client['_ioTools']).toBeDefined();
   });
 
   it('should return ioDump', async () => {
     const result = await client.dump();
-    expect(result).toBeDefined();
+    expect(result._hash).toEqual('h9UNtoBx3lvHU4yzAyz10M');
   });
 
   it('should return dumpTable', async () => {
-    const result = await client.dumpTable({ table: 'revisions' });
-    expect(result.revisions._tableCfg).toEqual('CubBZQUGTMLa5wMqqzHLXz');
+    const result = await client.dumpTable({ table: 'tableCfgs' });
+    await expectGolden('tableCfgs.json').toBe(result);
   });
 
   it('should create a table', async () => {
-    const tableCfg: TableCfg = hip(exampleTableCfg({ key: 'test' }));
+    const tableCfg: TableCfg = hip(exampleTableCfg({ key: 'table1' }));
     await client.createOrExtendTable({ tableCfg: tableCfg });
-    const result = await client.dumpTable({ table: 'test' });
-    expect(result.test).toBeDefined();
+    const result = await client.dumpTable({ table: 'table1' });
+    await expectGolden('table1.json').toBe(result);
   });
 
   it('should return tableCfgs', async () => {
