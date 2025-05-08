@@ -25,11 +25,15 @@ let client: IoClient;
 let db: Io;
 
 beforeEach(async () => {
-  // Run server with context
+  // Create server side database
   db = new IoMem();
   await db.init();
+
+  // Get a free port
   const port = await getPort();
   clearLockedPorts();
+
+  // Create an express app
   const app = express();
   app.use(cors({ origin: `http://localhost:${port}` }));
   app.use(
@@ -47,7 +51,8 @@ beforeEach(async () => {
 
   // Create an instance of the IoClient
   client = new IoClient(port);
-  //await client.isReady();
+  await client.init();
+  await client.isReady();
 });
 
 afterEach(() => {

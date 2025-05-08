@@ -17,26 +17,8 @@ import SuperJSON from 'superjson';
 
 import type { IoRouter } from './io-router.ts';
 export class IoClient implements Io {
-  private _clientRouter: ReturnType<typeof createTRPCClient<IoRouter>>;
-  constructor(port: number) {
-    // Initialize the tRPC client
-    this._clientRouter = createTRPCClient<IoRouter>({
-      links: [
-        splitLink({
-          condition: (op) => op.type === 'subscription',
-          true: httpSubscriptionLink({
-            url: `http://localhost:${port}/trpc`,
-            transformer: SuperJSON,
-          }),
-          false: httpBatchStreamLink({
-            url: `http://localhost:${port}/trpc`,
-            transformer: SuperJSON,
-          }),
-        }),
-      ],
-    });
-    this.init();
-  }
+  private _clientRouter!: ReturnType<typeof createTRPCClient<IoRouter>>;
+  constructor(public readonly port: number) {}
 
   private _ioTools!: IoTools;
   private _isReady = new IsReady();
@@ -86,7 +68,27 @@ export class IoClient implements Io {
     return this._clientRouter.readRows.query(request);
   }
 
+  _initTrpcClient() {
+    // Initialize the tRPC client
+    this._clientRouter = createTRPCClient<IoRouter>({
+      links: [
+        splitLink({
+          condition: (op) => op.type === 'subscription',
+          true: httpSubscriptionLink({
+            url: `http://localhost:${this.port}/trpc`,
+            transformer: SuperJSON,
+          }),
+          false: httpBatchStreamLink({
+            url: `http://localhost:${this.port}/trpc`,
+            transformer: SuperJSON,
+          }),
+        }),
+      ],
+    });
+  }
+
   private async _init() {
+    this._initTrpcClient();
     // Create tableCfgs table
     this._ioTools = new IoTools(this);
     this._clientRouter.initTableCfgs.query();
