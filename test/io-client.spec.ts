@@ -5,13 +5,14 @@
 // found in the LICENSE file in the root of this package.
 
 import { hip, hsh } from '@rljson/hash';
-import { IoMem } from '@rljson/io';
+import { Io, IoMem } from '@rljson/io';
 // import { IoSqlite } from '@rljson/io-sqlite';
 import { exampleTableCfg, Rljson, TableCfg } from '@rljson/rljson';
 import { createExpressMiddleware } from '@trpc/server/adapters/express';
 
 import cors from 'cors';
 import express from 'express';
+import getPort, { clearLockedPorts } from 'get-port';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { IoClient } from '../src/io-client';
@@ -19,33 +20,33 @@ import { ioRouter } from '../src/io-router';
 
 import { expectGolden } from './setup/goldens.ts';
 
-const fs = require('fs');
-const path = require('path');
-
 let server: ReturnType<(typeof express)['application']['listen']>;
 let client: IoClient;
+let db: Io;
 
 beforeEach(async () => {
   // Run server with context
-  const io = new IoMem();
-  await io.init();
+  db = new IoMem();
+  await db.init();
+  const port = await getPort();
+  clearLockedPorts();
   const app = express();
-  app.use(cors({ origin: 'http://localhost:3000' }));
+  app.use(cors({ origin: `http://localhost:${port}` }));
   app.use(
     '/trpc',
     createExpressMiddleware({
       router: ioRouter,
       createContext: () => {
         return {
-          io,
+          io: db,
         };
       },
     }),
   );
-  server = app.listen(3000);
+  server = app.listen(port);
 
   // Create an instance of the IoClient
-  client = new IoClient();
+  client = new IoClient(port);
   //await client.isReady();
 });
 
@@ -84,10 +85,10 @@ describe('io-client', () => {
     expect(result.tableCfgs._data.length).toEqual(2);
   });
 
-  // it('should return allTableNames', async () => {
-  //   const result = await client.allTableNames();
-  //   expect(result).toEqual(['tableCfgs', 'revisions']);
-  // });
+  it('should return allTableKeys', async () => {
+    const result = await client.allTableKeys();
+    expect(result).toEqual(['tableCfgs', 'revisions']);
+  });
 
   it('should write data', async () => {
     // create a table first
@@ -138,5 +139,43 @@ describe('io-client', () => {
     const readyPromise = client.isReady();
     client['_isReady'].resolve(); // Simulate readiness
     await expect(readyPromise).resolves.toBeUndefined();
+  });
+
+  it('should check if a table exists', async () => {
+    // Create a table first
+    const tableCfg: TableCfg = hip(exampleTableCfg({ key: 'existingTable' }));
+    await client.createOrExtendTable({ tableCfg: tableCfg });
+
+    // Check if the table exists
+    const exists = await client.tableExists('existingTable');
+    expect(exists).toBe(true);
+
+    // Check for a non-existing table
+    const notExists = await client.tableExists('nonExistingTable');
+    expect(notExists).toBe(false);
+  });
+
+  it('should return the row count of a table', async () => {
+    // Create a table first
+    const tableCfg: TableCfg = hip(exampleTableCfg({ key: 'rowCountTable' }));
+    await client.createOrExtendTable({ tableCfg: tableCfg });
+
+    // Add some rows to the table
+    const inputValue: Rljson = {
+      rowCountTable: {
+        _type: 'ingredients',
+        _data: [
+          { a: 'row1', b: 1 },
+          { a: 'row2', b: 2 },
+          { a: 'row3', b: 3 },
+        ],
+      },
+    };
+    const hashedValue = hsh(inputValue);
+    await client.write({ data: hashedValue });
+
+    // Check the row count
+    const rowCount = await client.rowCount('rowCountTable');
+    expect(rowCount).toEqual(3);
   });
 });

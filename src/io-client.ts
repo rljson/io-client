@@ -7,28 +7,29 @@ import { JsonValue } from '@rljson/json';
 import { Rljson, TableCfg, TableKey } from '@rljson/rljson';
 //httpBatchLink,
 import {
-  createTRPCClient, httpBatchStreamLink, httpSubscriptionLink, splitLink
+  createTRPCClient,
+  httpBatchStreamLink,
+  httpSubscriptionLink,
+  splitLink,
 } from '@trpc/client';
 
 import SuperJSON from 'superjson';
 
-
 import type { IoRouter } from './io-router.ts';
 export class IoClient implements Io {
   private _clientRouter: ReturnType<typeof createTRPCClient<IoRouter>>;
-
-  constructor() {
+  constructor(port: number) {
     // Initialize the tRPC client
     this._clientRouter = createTRPCClient<IoRouter>({
       links: [
         splitLink({
           condition: (op) => op.type === 'subscription',
           true: httpSubscriptionLink({
-            url: 'http://localhost:3000/trpc',
+            url: `http://localhost:${port}/trpc`,
             transformer: SuperJSON,
           }),
           false: httpBatchStreamLink({
-            url: 'http://localhost:3000/trpc',
+            url: `http://localhost:${port}/trpc`,
             transformer: SuperJSON,
           }),
         }),
