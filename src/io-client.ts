@@ -11,13 +11,14 @@ import {
   httpBatchStreamLink,
   httpSubscriptionLink,
   splitLink,
+  TRPCClient,
 } from '@trpc/client';
 
 import SuperJSON from 'superjson';
 
 import type { IoRouter } from './io-router.ts';
 export class IoClient implements Io {
-  private _clientRouter!: ReturnType<typeof createTRPCClient<IoRouter>>;
+  private _clientRouter!: TRPCClient<IoRouter>;
   constructor(public readonly port: number) {}
 
   private _ioTools!: IoTools;
@@ -30,6 +31,8 @@ export class IoClient implements Io {
   async init(): Promise<void> {
     await this._init();
   }
+
+  async close(): Promise<void> {}
 
   tableExists(tableKey: TableKey): Promise<boolean> {
     return this._clientRouter.tableExists.query(tableKey);

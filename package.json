@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "@rljson/hash": "^0.0.15",
-    "@rljson/io": "^0.0.29",
+    "@rljson/io": "^0.0.30",
     "@rljson/io-sqlite": "^0.0.9",
     "@rljson/is-ready": "^0.0.17",
     "@rljson/json": "^0.0.21",

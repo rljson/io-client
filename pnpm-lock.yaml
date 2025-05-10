@@ -12,8 +12,8 @@ importers:
         specifier: ^0.0.15
         version: 0.0.15
       '@rljson/io':
-        specifier: ^0.0.29
-        version: 0.0.29
+        specifier: ^0.0.30
+        version: 0.0.30
       '@rljson/io-sqlite':
         specifier: ^0.0.9
         version: 0.0.9
@@ -458,8 +458,8 @@ packages:
     resolution: {integrity: sha512-KB0tA5m/u/DYL60wGb9ji1gKgDGLaRhaXwlgKrmW4jUfgVnVaUaZrgp+qL55S8nIKimA686UB8qczwz7B6UIXg==}
     engines: {node: '>=22.14.0'}
 
-  '@rljson/io@0.0.29':
-    resolution: {integrity: sha512-+YxgLfRpRWQZohxpRpwPG+lmkGoVguHxkqdFHwm1XvLfBbE9Fbyg/E6iuBaBWn/TDaocX8DzycsX13FkqZI5AQ==}
+  '@rljson/io@0.0.30':
+    resolution: {integrity: sha512-XauskdQbQxzoO26BrTzYFTJaix1m8Rb2raLbZYDXGuhc55VtXOYjXd5XscjLuJPa1CuW/vgIDGUYVcCvqiGD9A==}
     engines: {node: '>=22.14.0'}
 
   '@rljson/is-ready@0.0.17':
@@ -2695,7 +2695,7 @@ snapshots:
       '@rljson/rljson': 0.0.50
       '@rljson/validate': 0.0.10
 
-  '@rljson/io@0.0.29':
+  '@rljson/io@0.0.30':
     dependencies:
       '@rljson/hash': 0.0.15
       '@rljson/is-ready': 0.0.17
