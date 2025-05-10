@@ -33,13 +33,13 @@ git pull
 
 ## Set pull request title
 
-Replace `Add directories.js and sync-folders.js` here and below
+Replace `Install conformance tests from io before tests` here and below
 by your new pull request title.
 
 ## Create a feature branch
 
 ```bash
-node scripts/create-branch.js "Update project DNA"
+node scripts/create-branch.js "Install conformance tests from io before tests"
 ```
 
 ## Update dependencies
@@ -65,7 +65,7 @@ In Vscode, press
 
 ```bash
 git add .
-git commit -am"Update project DNA"
+git commit -am"Install conformance tests from io before tests"
 ```
 
 ## Increase version
@@ -96,7 +96,7 @@ node scripts/push-branch.js
 ## Create a pull request
 
 ```bash
-gh pr create --base main --title "Update project DNA" --body " "
+gh pr create --base main --title "Install conformance tests from io before tests" --body " "
 ```
 
 ## Code review

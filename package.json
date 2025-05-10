@@ -1,6 +1,6 @@
 {
   "name": "@rljson/template-project",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Rljson template-project description",
   "homepage": "https://github.com/rljson/template-project",
   "bugs": "https://github.com/rljson/template-project/issues",
@@ -21,11 +21,12 @@
   "type": "module",
   "scripts": {
     "build": "pnpx vite build && tsc && node scripts/copy-readme-to-dist.js",
-    "test": "pnpx vitest run --coverage && pnpm run lint",
+    "test": "pnpm installConformanceTests && pnpx vitest run --coverage && pnpm run lint",
     "prebuild": "npm run test",
     "prepublishOnly": "npm run build",
     "lint": "pnpx eslint",
-    "updateGoldens": "cross-env UPDATE_GOLDENS=true pnpm test"
+    "updateGoldens": "cross-env UPDATE_GOLDENS=true pnpm test",
+    "installConformanceTests": "node scripts/install-conformance-tests.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.18",
@@ -55,7 +56,7 @@
   },
   "dependencies": {
     "@rljson/hash": "^0.0.15",
-    "@rljson/io": "^0.0.30",
+    "@rljson/io": "^0.0.31",
     "@rljson/io-sqlite": "^0.0.9",
     "@rljson/is-ready": "^0.0.17",
     "@rljson/json": "^0.0.21",
