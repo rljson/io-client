@@ -39,7 +39,7 @@
   // Copilot
   // ##############
 
-  // Removed deprecated setting "github.copilot.editor.enableAutoCompletions"
+  "github.copilot.editor.enableAutoCompletions": true,
   "github.copilot.enable": {
     "*": true,
     "plaintext": false,

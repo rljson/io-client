@@ -4,9 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@rljson/io': link:../io
-
 importers:
 
   .:
@@ -15,8 +12,8 @@ importers:
         specifier: ^0.0.15
         version: 0.0.15
       '@rljson/io':
-        specifier: link:../io
-        version: link:../io
+        specifier: ^0.0.30
+        version: 0.0.30
       '@rljson/io-sqlite':
         specifier: ^0.0.9
         version: 0.0.9
@@ -445,6 +442,10 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
+  '@rljson/hash@0.0.13':
+    resolution: {integrity: sha512-6K3ASn2PnyWOdqgU1/FtaU8vNUcHubcm7MlrhUUE63UOizBheoApYaMY91r3SaIRI0hbvR8NOa2k30PR/Ms/cw==}
+    engines: {node: '>=22.14.0'}
+
   '@rljson/hash@0.0.15':
     resolution: {integrity: sha512-F7KsvOd6zPQ+AOpBM0gudnhe/3yhDj6qM/yAQItAgGBHMavlEgUFfOdU4JW0qn2I9kMsLeaM3yXs8nBhswVwCg==}
     engines: {node: '>=22.14.0'}
@@ -453,16 +454,36 @@ packages:
     resolution: {integrity: sha512-TQ07k7JpT8BCKTYir1s5WhqbXARfkcHHvQjHvzUraKMaFmy7sk3fMoo8rmFSo2sGip22ECQAu8f6eeu04vMjhw==}
     engines: {node: '>=22.14.0'}
 
+  '@rljson/io@0.0.28':
+    resolution: {integrity: sha512-KB0tA5m/u/DYL60wGb9ji1gKgDGLaRhaXwlgKrmW4jUfgVnVaUaZrgp+qL55S8nIKimA686UB8qczwz7B6UIXg==}
+    engines: {node: '>=22.14.0'}
+
+  '@rljson/io@0.0.30':
+    resolution: {integrity: sha512-XauskdQbQxzoO26BrTzYFTJaix1m8Rb2raLbZYDXGuhc55VtXOYjXd5XscjLuJPa1CuW/vgIDGUYVcCvqiGD9A==}
+    engines: {node: '>=22.14.0'}
+
   '@rljson/is-ready@0.0.17':
     resolution: {integrity: sha512-rSDcGRWIngcOPJ/uE2kHGBhVoo/jEBKlmeJ5BdeDcSi3i6KrFIsIYepOJvybMc8+gcCOgecivCpPRd4fHksdcA==}
+    engines: {node: '>=22.14.0'}
+
+  '@rljson/json@0.0.18':
+    resolution: {integrity: sha512-sEFwnD6NwEbCl521PGKKX7xH2GyXXEBuJRx/RUxDsU6ZhKJkYyhYFe7G4TrGhDJefvBoillV0JqBGgYIJLjkYw==}
     engines: {node: '>=22.14.0'}
 
   '@rljson/json@0.0.21':
     resolution: {integrity: sha512-oNDY2B6HgHSzbaRh2fU8tTEEChuCzJU2sF9yzLYzS9jryT13XyfvSO13WkkPXgpMCe78AuIaGwbusNg8YARrdA==}
     engines: {node: '>=22.14.0'}
 
+  '@rljson/rljson@0.0.40':
+    resolution: {integrity: sha512-tt5wJv7sW9Cb9p8sLefrkVbZ3S7/ntVKuss6K+QpmoFks1dSDwzUqsHCIthEGt0s2yirGgNO1a++9rzNOq75dQ==}
+    engines: {node: '>=22.14.0'}
+
   '@rljson/rljson@0.0.50':
     resolution: {integrity: sha512-ONlrAYzPBza6qJx/cAEb2xu3dyt5+K9j7O/iopmmcRBwA9dOf0ukyHElz0huIM7w2DjBDd0DfnW63O4lyaxhwg==}
+    engines: {node: '>=22.14.0'}
+
+  '@rljson/validate@0.0.10':
+    resolution: {integrity: sha512-AhCrAZ3mGrwQ8K8wuHUItuWnQCx+2pnbfYMvvHndM3IYM/IMxsg444Qk2HBhbpB3QyvzIxl2ua5aR5Tdyy2JxQ==}
     engines: {node: '>=22.14.0'}
 
   '@rollup/pluginutils@5.1.4':
@@ -2645,6 +2666,12 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
+  '@rljson/hash@0.0.13':
+    dependencies:
+      '@aws-crypto/sha256-js': 5.2.0
+      '@rljson/json': 0.0.18
+      js-base64: 3.7.7
+
   '@rljson/hash@0.0.15':
     dependencies:
       '@aws-crypto/sha256-js': 5.2.0
@@ -2654,20 +2681,49 @@ snapshots:
   '@rljson/io-sqlite@0.0.9':
     dependencies:
       '@rljson/hash': 0.0.15
-      '@rljson/io': link:../io
+      '@rljson/io': 0.0.28
       '@rljson/is-ready': 0.0.17
       '@rljson/json': 0.0.21
       '@rljson/rljson': 0.0.50
       better-sqlite3: 11.10.0
 
+  '@rljson/io@0.0.28':
+    dependencies:
+      '@rljson/hash': 0.0.15
+      '@rljson/is-ready': 0.0.17
+      '@rljson/json': 0.0.21
+      '@rljson/rljson': 0.0.50
+      '@rljson/validate': 0.0.10
+
+  '@rljson/io@0.0.30':
+    dependencies:
+      '@rljson/hash': 0.0.15
+      '@rljson/is-ready': 0.0.17
+      '@rljson/json': 0.0.21
+      '@rljson/rljson': 0.0.50
+      '@rljson/validate': 0.0.10
+
   '@rljson/is-ready@0.0.17': {}
 
+  '@rljson/json@0.0.18': {}
+
   '@rljson/json@0.0.21': {}
+
+  '@rljson/rljson@0.0.40':
+    dependencies:
+      '@rljson/hash': 0.0.13
+      '@rljson/json': 0.0.18
 
   '@rljson/rljson@0.0.50':
     dependencies:
       '@rljson/hash': 0.0.15
       '@rljson/json': 0.0.21
+
+  '@rljson/validate@0.0.10':
+    dependencies:
+      '@rljson/hash': 0.0.13
+      '@rljson/json': 0.0.18
+      '@rljson/rljson': 0.0.40
 
   '@rollup/pluginutils@5.1.4(rollup@4.40.2)':
     dependencies:
