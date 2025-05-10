@@ -33,13 +33,13 @@ git pull
 
 ## Set pull request title
 
-Replace `install-conformance-tests` here and below
+Replace `Add directories.js and sync-folders.js` here and below
 by your new pull request title.
 
 ## Create a feature branch
 
 ```bash
-node scripts/create-branch.js "install-conformance-tests"
+node scripts/create-branch.js "Update project DNA"
 ```
 
 ## Update dependencies
@@ -65,7 +65,7 @@ In Vscode, press
 
 ```bash
 git add .
-git commit -am"install-conformance-tests"
+git commit -am"Update project DNA"
 ```
 
 ## Increase version
@@ -96,7 +96,7 @@ node scripts/push-branch.js
 ## Create a pull request
 
 ```bash
-gh pr create --base main --title "install-conformance-tests" --body " "
+gh pr create --base main --title "Update project DNA" --body " "
 ```
 
 ## Code review
