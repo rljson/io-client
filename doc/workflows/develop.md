@@ -33,13 +33,13 @@ git pull
 
 ## Set pull request title
 
-Replace `create io-client` here and below
+Replace `install-conformance-tests` here and below
 by your new pull request title.
 
 ## Create a feature branch
 
 ```bash
-node scripts/create-branch.js "create io-client"
+node scripts/create-branch.js "install-conformance-tests"
 ```
 
 ## Update dependencies
@@ -65,7 +65,7 @@ In Vscode, press
 
 ```bash
 git add .
-git commit -am"create io-client"
+git commit -am"install-conformance-tests"
 ```
 
 ## Increase version
@@ -96,7 +96,7 @@ node scripts/push-branch.js
 ## Create a pull request
 
 ```bash
-gh pr create --base main --title "create io-client" --body " "
+gh pr create --base main --title "install-conformance-tests" --body " "
 ```
 
 ## Code review
