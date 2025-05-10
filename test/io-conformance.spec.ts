@@ -17,14 +17,20 @@
 
 import { hip, rmhsh } from '@rljson/hash';
 import {
-  addColumnsToTableCfg, exampleTableCfg, IngredientsTable, Rljson, TableCfg, TableType
+  addColumnsToTableCfg,
+  exampleTableCfg,
+  IngredientsTable,
+  Rljson,
+  TableCfg,
+  TableType,
 } from '@rljson/rljson';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { Io, IoTestSetup, IoTools, testSetup } from './io-conformance.setup.ts';
-import { expectGolden, ExpectGoldenOptions } from './setup/goldens.ts';
+import { Io, IoTestSetup, IoTools } from '@rljson/io';
 
+import { testSetup } from './io-conformance.setup.ts';
+import { expectGolden, ExpectGoldenOptions } from './setup/goldens.ts';
 
 const ego: ExpectGoldenOptions = {
   npmUpdateGoldensEnabled: false,

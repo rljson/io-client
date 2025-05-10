@@ -33,13 +33,13 @@ git pull
 
 ## Set pull request title
 
-Replace `Install conformance tests from io before tests` here and below
+Replace `Update conformance tests install script` here and below
 by your new pull request title.
 
 ## Create a feature branch
 
 ```bash
-node scripts/create-branch.js "Install conformance tests from io before tests"
+node scripts/create-branch.js "Update conformance tests install script "
 ```
 
 ## Update dependencies
@@ -65,7 +65,7 @@ In Vscode, press
 
 ```bash
 git add .
-git commit -am"Install conformance tests from io before tests"
+git commit -am"Update conformance tests install script "
 ```
 
 ## Increase version
@@ -96,7 +96,7 @@ node scripts/push-branch.js
 ## Create a pull request
 
 ```bash
-gh pr create --base main --title "Install conformance tests from io before tests" --body " "
+gh pr create --base main --title "Update conformance tests install script " --body " "
 ```
 
 ## Code review
