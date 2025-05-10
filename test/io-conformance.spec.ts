@@ -4,20 +4,31 @@
 // Use of this source code is governed by terms that can be
 // found in the LICENSE file in the root of this package.
 
+// ⚠️ DO NOT MODIFY THIS FILE DIRECTLY ⚠️
+// 
+// This file is a copy of @rljson/io/test/io-conformance.spec.ts.
+//
+// To make changes, please execute the following steps:
+//   1. Clone <https://github.com/rljson/io>
+//   2. Make changes to the original file in the test folder
+//   3. Submit a pull request
+//   4. Publish a the new changes to npm
+
+
 import { hip, rmhsh } from '@rljson/hash';
 import {
-  addColumnsToTableCfg,
-  exampleTableCfg,
-  IngredientsTable,
-  Rljson,
-  TableCfg,
-  TableType,
+  addColumnsToTableCfg, exampleTableCfg, IngredientsTable, Rljson, TableCfg, TableType
 } from '@rljson/rljson';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { Io, IoTestSetup, IoTools, testSetup } from './io-conformance.setup.ts';
-import { expectGolden } from './setup/goldens.ts';
+import { expectGolden, ExpectGoldenOptions } from './setup/goldens.ts';
+
+
+const ego: ExpectGoldenOptions = {
+  npmUpdateGoldensEnabled: false,
+};
 
 export const runIoConformanceTests = () => {
   return describe('Io Conformance', async () => {
@@ -58,7 +69,7 @@ export const runIoConformanceTests = () => {
     describe('tableCfgs table', () => {
       it('should be available after isReady() resolves', async () => {
         const dump = await io.dumpTable({ table: 'tableCfgs' });
-        await expectGolden('io-conformance/tableCfgs.json').toBe(dump);
+        await expectGolden('io-conformance/tableCfgs.json', ego).toBe(dump);
       });
     });
 
@@ -834,12 +845,12 @@ export const runIoConformanceTests = () => {
 
     describe('dump()', () => {
       it('returns a copy of the complete database', async () => {
-        await expectGolden('io-conformance/dump/empty.json').toBe(
+        await expectGolden('io-conformance/dump/empty.json', ego).toBe(
           await io.dump(),
         );
         await createExampleTable('table1');
         await createExampleTable('table2');
-        await expectGolden('io-conformance/dump/two-tables.json').toBe(
+        await expectGolden('io-conformance/dump/two-tables.json', ego).toBe(
           await io.dump(),
         );
       });
@@ -857,7 +868,7 @@ export const runIoConformanceTests = () => {
           },
         });
 
-        await expectGolden('io-conformance/dumpTable/table1.json').toBe(
+        await expectGolden('io-conformance/dumpTable/table1.json', ego).toBe(
           await io.dumpTable({ table: 'table1' }),
         );
       });
