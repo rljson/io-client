@@ -1,13 +1,29 @@
 {
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Current Script",
+      "name": "Debug Server",
       "type": "node",
       "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal"
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite-node"],
+      "args": ["${workspaceFolder}/src/server/api.ts"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**", "**/*.mjs"], // Keep Node.js internals skipped
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "name": "Debug Client",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite-node"],
+      "args": ["${workspaceFolder}/src/client/index.ts"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**", "**/*.mjs"], // Keep Node.js internals skipped
+      "internalConsoleOptions": "neverOpen"
     }
   ]
 }
