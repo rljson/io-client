@@ -33,13 +33,13 @@ git pull
 
 ## Set pull request title
 
-Replace `Update conformance tests install script` here and below
+Replace `Rename package name` here and below
 by your new pull request title.
 
 ## Create a feature branch
 
 ```bash
-node scripts/create-branch.js "Update conformance tests install script "
+node scripts/create-branch.js "Rename package name"
 ```
 
 ## Update dependencies
@@ -65,7 +65,7 @@ In Vscode, press
 
 ```bash
 git add .
-git commit -am"Update conformance tests install script "
+git commit -am"Rename package name"
 ```
 
 ## Increase version
@@ -96,7 +96,7 @@ node scripts/push-branch.js
 ## Create a pull request
 
 ```bash
-gh pr create --base main --title "Update conformance tests install script " --body " "
+gh pr create --base main --title "Rename package name" --body " "
 ```
 
 ## Code review
