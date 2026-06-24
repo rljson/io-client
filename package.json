@@ -1,6 +1,6 @@
 {
   "name": "@rljson/io-client",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Rljson IO client library",
   "homepage": "https://github.com/rljson/io-client",
   "bugs": "https://github.com/rljson/io-client/issues",
