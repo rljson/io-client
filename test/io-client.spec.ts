@@ -70,7 +70,7 @@ describe('io-client', () => {
 
   it('should return ioDump', async () => {
     const result = await client.dump();
-    expect(result._hash).toEqual('h9UNtoBx3lvHU4yzAyz10M');
+    expect(result._hash).toEqual('dBFECc7GRh-vrkpouyUTCy');
   });
 
   it('should return dumpTable', async () => {
@@ -92,7 +92,7 @@ describe('io-client', () => {
 
   it('should return allTableKeys', async () => {
     const result = await client.allTableKeys();
-    expect(result).toEqual(['tableCfgs', 'revisions']);
+    expect(result).toEqual(['revisions', 'tableCfgs']);
   });
 
   it('should write data', async () => {
@@ -134,10 +134,10 @@ describe('io-client', () => {
   it('should read rows', async () => {
     const data = {
       table: 'tableCfgs',
-      where: { type: 'ingredients' },
+      where: { type: 'tableCfgs' },
     };
     const result = await client.readRows(data);
-    expect(result.tableCfgs._data.length).toEqual(2);
+    expect(result.tableCfgs._data.length).toEqual(1);
   });
 
   it('should resolve isReady', async () => {

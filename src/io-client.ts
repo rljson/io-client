@@ -4,7 +4,7 @@
 import { Io, IoTools } from '@rljson/io';
 import { IsReady } from '@rljson/is-ready';
 import { JsonValue } from '@rljson/json';
-import { Rljson, TableCfg, TableKey } from '@rljson/rljson';
+import { ContentType, Rljson, TableCfg, TableKey } from '@rljson/rljson';
 //httpBatchLink,
 import {
   createTRPCClient,
@@ -23,6 +23,11 @@ export class IoClient implements Io {
 
   private _ioTools!: IoTools;
   private _isReady = new IsReady();
+  private _isOpen = false;
+
+  get isOpen(): boolean {
+    return this._isOpen;
+  }
 
   isReady(): Promise<void> {
     return this._isReady.promise;
@@ -30,12 +35,19 @@ export class IoClient implements Io {
 
   async init(): Promise<void> {
     await this._init();
+    this._isOpen = true;
   }
 
-  async close(): Promise<void> {}
+  async close(): Promise<void> {
+    this._isOpen = false;
+  }
 
   tableExists(tableKey: TableKey): Promise<boolean> {
     return this._clientRouter.tableExists.query(tableKey);
+  }
+
+  contentType(request: { table: string }): Promise<ContentType> {
+    return this._clientRouter.contentType.query(request.table);
   }
   dump(): Promise<Rljson> {
     return this._clientRouter.dump.query();
@@ -49,8 +61,12 @@ export class IoClient implements Io {
     const tableCfg = request.tableCfg as TableCfg;
     await this._clientRouter.createOrExtendTable.mutate(tableCfg);
   }
+  rawTableCfgs(): Promise<TableCfg[]> {
+    return this._clientRouter.rawTableCfgs.query();
+  }
+
   tableCfgs(): Promise<Rljson> {
-    return this._clientRouter.tableCfgs.query();
+    return this._clientRouter.dumpTable.query('tableCfgs');
   }
 
   allTableKeys(): Promise<string[]> {

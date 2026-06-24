@@ -24,17 +24,21 @@ class IoClientTestSetup implements IoTestSetup {
     return this._io;
   }
 
-  async init(): Promise<void> {
+  async beforeAll(): Promise<void> {}
+
+  async beforeEach(): Promise<void> {
     await this._initPort();
     await this._initDb();
     await this._initServer();
     await this._initIoClient();
   }
 
-  async tearDown(): Promise<void> {
+  async afterEach(): Promise<void> {
     this._server.closeAllConnections();
     this._server.close();
   }
+
+  async afterAll(): Promise<void> {}
 
   // ######################
   // Private
@@ -55,7 +59,7 @@ class IoClientTestSetup implements IoTestSetup {
   _initDb = async () => {
     // Create server side database
     this._db = new IoMem();
-    this._db.init();
+    await this._db.init();
   };
 
   // ...........................................................................
