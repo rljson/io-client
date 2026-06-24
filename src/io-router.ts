@@ -3,7 +3,7 @@
 //
 import { Io } from '@rljson/io';
 import { JsonValue } from '@rljson/json';
-import { Rljson, TableCfg } from '@rljson/rljson';
+import { ContentType, Rljson, TableCfg } from '@rljson/rljson';
 import { initTRPC } from '@trpc/server';
 
 import SuperJSON from 'superjson';
@@ -37,16 +37,16 @@ export const ioRouter = router({
       await createOrExtendTable(opts);
     }),
 
-  tableCfgs: publicProcedure.query(async (opts) => {
-    const result: Rljson = await opts.ctx.io.tableCfgs();
+  rawTableCfgs: publicProcedure.query(async (opts) => {
+    const result: TableCfg[] = await opts.ctx.io.rawTableCfgs();
     return result;
   }),
 
-  // error: don't know
-  // allTableKeys: publicProcedure.query(async (opts) => {
-  //   const result: string[] = await opts.ctx.io.allTableKeys();
-  //   return result;
-  // }),
+  contentType: publicProcedure.input(String).query(async (opts) => {
+    const { input } = opts;
+    const result: ContentType = await opts.ctx.io.contentType({ table: input });
+    return result;
+  }),
 
   write: publicProcedure.input(z.unknown()).mutation(async (opts) => {
     const { input } = opts;
@@ -67,7 +67,7 @@ export const ioRouter = router({
   }),
 
   initTableCfgs: publicProcedure.query(async (opts) => {
-    const result: Rljson = await opts.ctx.io.tableCfgs();
+    const result: Rljson = await opts.ctx.io.dumpTable({ table: 'tableCfgs' });
     return result;
   }),
   rowCount: publicProcedure.input(String).query(async (opts) => {
