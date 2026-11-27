@@ -33,13 +33,13 @@ git pull
 
 ## Set pull request title
 
-Replace `install-conformance-tests` here and below
+Replace `Rename package name` here and below
 by your new pull request title.
 
 ## Create a feature branch
 
 ```bash
-node scripts/create-branch.js "install-conformance-tests"
+node scripts/create-branch.js "Rename package name"
 ```
 
 ## Update dependencies
@@ -50,10 +50,10 @@ pnpm update --latest
 
 ## Develop & debug
 
-- [Debug & debug with Vscode](./debug-with-vscode.md)
-- [Update Goldens](./update-goldens.md)
-- [Rename classes](./rename-classes.md)
-- [Super hero tricks](./super-hero.md)
+- [Debug & debug with Vscode](debug-with-vscode.md)
+- [Update Goldens](update-goldens.md)
+- [Rename classes](rename-classes.md)
+- [Super hero tricks](../super-hero.md)
 
 ## Commit
 
@@ -65,7 +65,7 @@ In Vscode, press
 
 ```bash
 git add .
-git commit -am"install-conformance-tests"
+git commit -am"Rename package name"
 ```
 
 ## Increase version
@@ -78,7 +78,7 @@ git commit -am"Increase version"
 ## Run tests and build
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ## Rebase main
@@ -96,12 +96,12 @@ node scripts/push-branch.js
 ## Create a pull request
 
 ```bash
-gh pr create --base main --title "install-conformance-tests" --body " "
+gh pr create --base main --title "Rename package name" --body " "
 ```
 
 ## Code review
 
-You need a code review? Read [code-review.md](./code-review.md).
+You need a code review? Read [code-review.md](code-review.md).
 
 If you don't require a code review, auto merge the branch
 
